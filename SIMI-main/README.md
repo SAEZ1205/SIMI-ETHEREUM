@@ -109,11 +109,11 @@ Usa:
 
 > El contrato aún debe compilarse, probarse y desplegarse antes de declararlo listo para producción. El repositorio inicial no contenía toolchain ni tests blockchain ejecutables.
 
-## UX por roles
+## UX guiada por momentos
 
-### Operadora
+### Empleado de la operadora
 
-Dashboard con:
+El **Centro de Operaciones** es la pantalla principal. Muestra:
 
 - solicitudes activas;
 - pendientes;
@@ -126,12 +126,15 @@ Dashboard con:
 - alerta enviada;
 - detalle técnico de auditoría;
 - indicador de alto riesgo para disputas.
+- una única próxima acción recomendada por caso;
+- creación de solicitudes con firma EIP-712 de la operadora;
+- separación visible entre funciones reales, demostradas y pendientes.
 
-### Verificador
+### Verificador de identidad
 
 Flujo reducido a validaciones pendientes y acción de `Registrar identidad verificada`.
 
-### Titular
+### Titular de la línea
 
 Diseño mobile-first con dos decisiones principales:
 
@@ -139,6 +142,8 @@ Diseño mobile-first con dos decisiones principales:
 - **No reconozco esta solicitud**
 
 La UX evita términos como gas, nonce, RPC o `execution reverted`.
+
+Las tres vistas no representan tres productos diferentes. Son los tres momentos que deben completar actores independientes para que ninguna persona autorice por sí sola una reposición. El frontend incluye un **recorrido de demostración** para enseñarlos en una sola sesión. En producción, los roles y credenciales deben estar separados.
 
 ## Alertas
 
@@ -203,7 +208,9 @@ frontend/
 └── src/
     ├── App.jsx
     ├── main.jsx
-    └── styles.css
+    ├── services/wallet.js
+    ├── styles.css
+    └── ui-v2.css
 ```
 
 ### Ejecutar localmente
@@ -251,7 +258,7 @@ Para la UI actual no es necesario añadir variables privadas en Vercel.
 
 ## Demo actual
 
-El frontend está preparado para enseñar dos narrativas:
+El frontend está preparado para enseñar dos narrativas y conserva el avance de la demo en el navegador:
 
 ### Escenario A — legítimo
 
@@ -268,10 +275,15 @@ Operadora crea solicitud → identidad validada → Titular selecciona `No recon
 - UI Operadora;
 - UI Verificador;
 - UI Titular;
+- Centro de Operaciones guiado para el empleado;
 - estados centralizados;
 - timeline;
 - responsive/mobile-first;
 - mock data ficticio;
+- persistencia local de solicitudes de demostración;
+- conexión real con MetaMask;
+- detección y cambio a Arbitrum Sepolia;
+- firma EIP-712 desde MetaMask para solicitud, validación y decisión del titular (de demostración mientras no exista dirección de contrato desplegada);
 - flujo autorizado;
 - flujo disputado;
 - alertas simuladas claramente etiquetadas;
@@ -280,11 +292,10 @@ Operadora crea solicitud → identidad validada → Titular selecciona `No recon
 
 ### Preparado pero pendiente de integración real
 
-- conexión de wallet abstraída;
-- firma EIP-712 desde frontend/backend;
 - relayer;
 - despliegue de `SIMIv2.sol`;
 - ABI y dirección reales;
+- envío de la transacción final `authorize()` o `dispute()`;
 - WhatsApp/SMS reales;
 - tests de contrato;
 - benchmark de gas V1 vs V2;
@@ -308,12 +319,12 @@ Después pueden proyectarse 1, 1,000, 100,000 y 1,000,000 solicitudes usando sup
 
 ## Limitaciones del MVP
 
-- Las wallets tradicionales representan actores durante la demo.
+- Una sola sesión de wallet puede representar los tres momentos durante la demo; en producción los actores deben tener credenciales y permisos separados.
 - Las alertas actuales son simuladas.
 - El verificador es manual.
 - No existe todavía backend/relayer productivo.
 - `SIMIv2.sol` aún no tiene suite de tests ejecutada dentro de este repositorio.
-- La UI de demo mantiene estado en memoria y se reinicia al recargar.
+- La UI conserva el estado de demostración en `localStorage`; no sustituye una base de datos de producción.
 
 ## Roadmap
 
