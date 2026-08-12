@@ -1,7 +1,7 @@
 {
   "name": "simi-v2-frontend",
   "private": true,
-  "version": "2.0.0",
+  "version": "2.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
+    "ethers": "^6.15.0",
     "vite": "latest",
     "react": "latest",
     "react-dom": "latest",
